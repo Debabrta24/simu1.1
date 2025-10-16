@@ -7,3 +7,7 @@ node_modules
 .idea
 coverage
 *.tsbuildinfo
+replit.md
+design_guidelines.md
+README_DEPLOYMENT.md
+attached_assets
