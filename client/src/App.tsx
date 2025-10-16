@@ -76,7 +76,7 @@ export default function App() {
                   >
                     {/* <SiInstagram className="h-4 w-4" /> */}
                     <SiWhatsapp className="h-4 w-4 text-green-500" />
-                    <span className="hidden sm:inline">Click here to Say Thanks</span>
+                    <span className="hidden sm:inline">Click here to Say Thanks or feedback</span>
                   </a>
                 </Button>
               </header>
