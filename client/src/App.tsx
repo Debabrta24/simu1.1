@@ -6,6 +6,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { MobileLandscapePrompt } from "@/components/MobileLandscapePrompt";
+import { Button } from "@/components/ui/button";
+import { SiInstagram } from "react-icons/si";
 import BasicGates from "@/pages/BasicGates";
 import HalfAdder from "@/pages/HalfAdder";
 import FullAdder from "@/pages/FullAdder";
@@ -53,11 +55,27 @@ export default function App() {
           <div className="flex h-screen w-full">
             <AppSidebar />
             <div className="flex flex-col flex-1 overflow-hidden">
-              <header className="flex items-center justify-between p-4 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+              <header className="flex items-center justify-between gap-4 p-4 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
                 <SidebarTrigger data-testid="button-sidebar-toggle" />
                 <div className="text-xs text-muted-foreground font-mono">
                   Educational Circuit Simulator
                 </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  asChild
+                  data-testid="button-developer-link"
+                >
+                  <a
+                    href="https://www.instagram.com/imdevadhikari/?hl=en"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2"
+                  >
+                    <SiInstagram className="h-4 w-4" />
+                    <span className="hidden sm:inline">Developer</span>
+                  </a>
+                </Button>
               </header>
               <main className="flex-1 overflow-y-auto p-6 md:p-8">
                 <div className="max-w-7xl mx-auto">
