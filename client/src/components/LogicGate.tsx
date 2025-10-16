@@ -154,14 +154,14 @@ export function LogicGate({ type, inputA, inputB, output, powered = true, classN
             x2="30"
             y2="35"
             stroke={getInputAColor()}
-            strokeWidth="2"
+            strokeWidth="3"
             className="transition-colors duration-300"
           >
             {powered && inputA && (
               <animate
                 attributeName="stroke-dasharray"
-                values="0,100;100,0"
-                dur="1s"
+                values="0,8;8,0"
+                dur="0.8s"
                 repeatCount="indefinite"
               />
             )}
@@ -173,14 +173,14 @@ export function LogicGate({ type, inputA, inputB, output, powered = true, classN
             x2="30"
             y2="65"
             stroke={getInputBColor()}
-            strokeWidth="2"
+            strokeWidth="3"
             className="transition-colors duration-300"
           >
             {powered && inputB && (
               <animate
                 attributeName="stroke-dasharray"
-                values="0,100;100,0"
-                dur="1s"
+                values="0,8;8,0"
+                dur="0.8s"
                 repeatCount="indefinite"
               />
             )}
@@ -195,14 +195,14 @@ export function LogicGate({ type, inputA, inputB, output, powered = true, classN
           x2="30"
           y2="50"
           stroke={getInputAColor()}
-          strokeWidth="2"
+          strokeWidth="3"
           className="transition-colors duration-300"
         >
           {powered && inputA && (
             <animate
               attributeName="stroke-dasharray"
-              values="0,100;100,0"
-              dur="1s"
+              values="0,8;8,0"
+              dur="0.8s"
               repeatCount="indefinite"
             />
           )}
@@ -217,14 +217,14 @@ export function LogicGate({ type, inputA, inputB, output, powered = true, classN
         x2="180"
         y2="50"
         stroke={getOutputColor()}
-        strokeWidth="2"
+        strokeWidth="3"
         className="transition-colors duration-300"
       >
         {powered && output && (
           <animate
             attributeName="stroke-dasharray"
-            values="0,100;100,0"
-            dur="1s"
+            values="0,8;8,0"
+            dur="0.8s"
             repeatCount="indefinite"
           />
         )}

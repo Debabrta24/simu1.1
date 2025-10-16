@@ -19,37 +19,37 @@ export function HalfAdderDiagram({ inputA, inputB, sum, carry, powered = true }:
 
   return (
     <svg viewBox="0 0 300 200" className="w-full max-w-md">
-      <line x1="20" y1="60" x2="80" y2="60" stroke={getInputAColor()} strokeWidth="2">
+      <line x1="20" y1="60" x2="80" y2="60" stroke={getInputAColor()} strokeWidth="3">
         {powered && inputA && (
-          <animate attributeName="stroke-dasharray" values="0,100;100,0" dur="1s" repeatCount="indefinite" />
+          <animate attributeName="stroke-dasharray" values="0,8;8,0" dur="0.8s" repeatCount="indefinite" />
         )}
       </line>
       <circle cx="80" cy="60" r="3" fill={getInputAColor()} />
-      <line x1="80" y1="60" x2="100" y2="50" stroke={getInputAColor()} strokeWidth="2">
+      <line x1="80" y1="60" x2="100" y2="50" stroke={getInputAColor()} strokeWidth="3">
         {powered && inputA && (
-          <animate attributeName="stroke-dasharray" values="0,100;100,0" dur="1s" repeatCount="indefinite" />
+          <animate attributeName="stroke-dasharray" values="0,8;8,0" dur="0.8s" repeatCount="indefinite" />
         )}
       </line>
-      <line x1="80" y1="60" x2="100" y2="120" stroke={getInputAColor()} strokeWidth="2">
+      <line x1="80" y1="60" x2="100" y2="120" stroke={getInputAColor()} strokeWidth="3">
         {powered && inputA && (
-          <animate attributeName="stroke-dasharray" values="0,100;100,0" dur="1s" repeatCount="indefinite" />
+          <animate attributeName="stroke-dasharray" values="0,8;8,0" dur="0.8s" repeatCount="indefinite" />
         )}
       </line>
 
-      <line x1="20" y1="140" x2="80" y2="140" stroke={getInputBColor()} strokeWidth="2">
+      <line x1="20" y1="140" x2="80" y2="140" stroke={getInputBColor()} strokeWidth="3">
         {powered && inputB && (
-          <animate attributeName="stroke-dasharray" values="0,100;100,0" dur="1s" repeatCount="indefinite" />
+          <animate attributeName="stroke-dasharray" values="0,8;8,0" dur="0.8s" repeatCount="indefinite" />
         )}
       </line>
       <circle cx="80" cy="140" r="3" fill={getInputBColor()} />
-      <line x1="80" y1="140" x2="100" y2="70" stroke={getInputBColor()} strokeWidth="2">
+      <line x1="80" y1="140" x2="100" y2="70" stroke={getInputBColor()} strokeWidth="3">
         {powered && inputB && (
-          <animate attributeName="stroke-dasharray" values="0,100;100,0" dur="1s" repeatCount="indefinite" />
+          <animate attributeName="stroke-dasharray" values="0,8;8,0" dur="0.8s" repeatCount="indefinite" />
         )}
       </line>
-      <line x1="80" y1="140" x2="100" y2="140" stroke={getInputBColor()} strokeWidth="2">
+      <line x1="80" y1="140" x2="100" y2="140" stroke={getInputBColor()} strokeWidth="3">
         {powered && inputB && (
-          <animate attributeName="stroke-dasharray" values="0,100;100,0" dur="1s" repeatCount="indefinite" />
+          <animate attributeName="stroke-dasharray" values="0,8;8,0" dur="0.8s" repeatCount="indefinite" />
         )}
       </line>
 
@@ -77,15 +77,15 @@ export function HalfAdderDiagram({ inputA, inputB, sum, carry, powered = true }:
         />
       </g>
 
-      <line x1="160" y1="60" x2="220" y2="60" stroke={getSumColor()} strokeWidth="2">
+      <line x1="160" y1="60" x2="220" y2="60" stroke={getSumColor()} strokeWidth="3">
         {powered && sum && (
-          <animate attributeName="stroke-dasharray" values="0,100;100,0" dur="1s" repeatCount="indefinite" />
+          <animate attributeName="stroke-dasharray" values="0,8;8,0" dur="0.8s" repeatCount="indefinite" />
         )}
       </line>
 
-      <line x1="160" y1="130" x2="220" y2="130" stroke={getCarryColor()} strokeWidth="2">
+      <line x1="160" y1="130" x2="220" y2="130" stroke={getCarryColor()} strokeWidth="3">
         {powered && carry && (
-          <animate attributeName="stroke-dasharray" values="0,100;100,0" dur="1s" repeatCount="indefinite" />
+          <animate attributeName="stroke-dasharray" values="0,8;8,0" dur="0.8s" repeatCount="indefinite" />
         )}
       </line>
 

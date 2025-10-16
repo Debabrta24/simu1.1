@@ -7,7 +7,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LogicGate } from "@/components/LogicGate";
 import { PowerButton } from "@/components/PowerButton";
 
-type GateType = 'AND' | 'OR' | 'NAND' | 'NOR' | 'XOR' | 'XNOR';
+type GateType = 'AND' | 'OR' | 'NAND' | 'NOR' | 'XOR' | 'XNOR' | 'NOT';
 
 const gateLogic = {
   AND: (a: boolean, b: boolean) => a && b,
@@ -16,6 +16,7 @@ const gateLogic = {
   NOR: (a: boolean, b: boolean) => !(a || b),
   XOR: (a: boolean, b: boolean) => a !== b,
   XNOR: (a: boolean, b: boolean) => a === b,
+  NOT: (a: boolean, b: boolean) => !a,
 };
 
 const gateEquations: Record<GateType, string> = {
@@ -25,6 +26,7 @@ const gateEquations: Record<GateType, string> = {
   NOR: "Y = (A + B)'",
   XOR: "Y = A ⊕ B",
   XNOR: "Y = (A ⊕ B)'",
+  NOT: "Y = A'",
 };
 
 const truthTableData = [
@@ -47,20 +49,28 @@ export default function BasicGates() {
   };
 
   const getTruthTableRows = () => {
+    if (activeGate === 'NOT') {
+      return [
+        [false, !false],
+        [true, !true],
+      ];
+    }
     return truthTableData.map(([a, b]) => [
       a, b, gateLogic[activeGate](a, b)
     ]);
   };
 
+  const isSingleInput = activeGate === 'NOT';
+
   return (
     <CircuitLayout
       title="Basic Logic Gates"
-      principle="Logic gates are the fundamental building blocks of digital circuits. Each gate performs a specific Boolean operation on one or more binary inputs to produce a single binary output. AND outputs 1 only when all inputs are 1. OR outputs 1 when at least one input is 1. NAND and NOR are inverted versions of AND and OR. XOR outputs 1 when inputs differ, while XNOR outputs 1 when inputs match."
+      principle="Logic gates are the fundamental building blocks of digital circuits. Each gate performs a specific Boolean operation on one or more binary inputs to produce a single binary output. AND outputs 1 only when all inputs are 1. OR outputs 1 when at least one input is 1. NAND and NOR are inverted versions of AND and OR. XOR outputs 1 when inputs differ, while XNOR outputs 1 when inputs match. NOT inverts a single input."
       onReset={reset}
       booleanEquations={[gateEquations[activeGate]]}
       truthTable={
         <TruthTable
-          headers={['A', 'B', 'Y']}
+          headers={isSingleInput ? ['A', 'Y'] : ['A', 'B', 'Y']}
           rows={getTruthTableRows()}
           currentInputs={inputs}
         />
@@ -68,9 +78,10 @@ export default function BasicGates() {
     >
       <div className="space-y-8">
         <Tabs value={activeGate} onValueChange={(v) => setActiveGate(v as GateType)}>
-          <TabsList className="grid w-full grid-cols-6 gap-2">
+          <TabsList className="grid w-full grid-cols-7 gap-2">
             <TabsTrigger value="AND" data-testid="tab-and">AND</TabsTrigger>
             <TabsTrigger value="OR" data-testid="tab-or">OR</TabsTrigger>
+            <TabsTrigger value="NOT" data-testid="tab-not">NOT</TabsTrigger>
             <TabsTrigger value="NAND" data-testid="tab-nand">NAND</TabsTrigger>
             <TabsTrigger value="NOR" data-testid="tab-nor">NOR</TabsTrigger>
             <TabsTrigger value="XOR" data-testid="tab-xor">XOR</TabsTrigger>
@@ -91,12 +102,14 @@ export default function BasicGates() {
               onChange={(v) => setInputs({ ...inputs, A: v })}
               testId="toggle-input-a"
             />
-            <ToggleSwitch
-              label="B"
-              value={inputs.B}
-              onChange={(v) => setInputs({ ...inputs, B: v })}
-              testId="toggle-input-b"
-            />
+            {!isSingleInput && (
+              <ToggleSwitch
+                label="B"
+                value={inputs.B}
+                onChange={(v) => setInputs({ ...inputs, B: v })}
+                testId="toggle-input-b"
+              />
+            )}
           </div>
 
           <div className="flex items-center justify-center">
