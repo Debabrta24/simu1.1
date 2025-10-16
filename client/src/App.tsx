@@ -7,7 +7,8 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { MobileLandscapePrompt } from "@/components/MobileLandscapePrompt";
 import { Button } from "@/components/ui/button";
-import { SiInstagram } from "react-icons/si";
+// import { SiInstagram } from "react-icons/si";
+import { SiWhatsapp } from "react-icons/si";
 import BasicGates from "@/pages/BasicGates";
 import HalfAdder from "@/pages/HalfAdder";
 import FullAdder from "@/pages/FullAdder";
@@ -68,12 +69,13 @@ export default function App() {
                 >
                   
                   <a
-                    href="https://wa.me/919093013606?text=Hello%20Debabrata%2C%20I%20want%20to%20connect%20with%20you"
+                    href="https://wa.me/919093013606?text=Hii,%20Debabrata"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2"
                   >
-                    <SiInstagram className="h-4 w-4" />
+                    {/* <SiInstagram className="h-4 w-4" /> */}
+                    <SiWhatsapp className="h-4 w-4 text-green-500" />
                     <span className="hidden sm:inline">Say Thanks</span>
                   </a>
                 </Button>
