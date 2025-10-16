@@ -66,14 +66,15 @@ export default function App() {
                   asChild
                   data-testid="button-developer-link"
                 >
+                  
                   <a
-                    href="https://www.instagram.com/imdevadhikari/?hl=en"
+                    href="https://wa.me/919093013606?text=Hello%20Debabrata%2C%20I%20want%20to%20connect%20with%20you"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2"
                   >
                     <SiInstagram className="h-4 w-4" />
-                    <span className="hidden sm:inline">Developer</span>
+                    <span className="hidden sm:inline">Say Thanks</span>
                   </a>
                 </Button>
               </header>
