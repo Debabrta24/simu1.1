@@ -3,14 +3,18 @@ import { CircuitLayout } from "@/components/CircuitLayout";
 import { ToggleSwitch } from "@/components/ToggleSwitch";
 import { LEDIndicator } from "@/components/LEDIndicator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PowerButton } from "@/components/PowerButton";
+import { LogicGate } from "@/components/LogicGate";
 
 type Operation = 'AND' | 'OR' | 'NOT' | 'ADD' | 'SUB';
 
 export default function CompositeUnit() {
   const [inputs, setInputs] = useState({ A: false, B: false });
   const [operation, setOperation] = useState<Operation>('AND');
+  const [powered, setPowered] = useState(true);
 
   const getOutput = () => {
+    if (!powered) return false;
     switch (operation) {
       case 'AND': return inputs.A && inputs.B;
       case 'OR': return inputs.A || inputs.B;
@@ -22,6 +26,7 @@ export default function CompositeUnit() {
   };
 
   const getCarry = () => {
+    if (!powered) return false;
     if (operation === 'ADD') return inputs.A && inputs.B;
     if (operation === 'SUB') return !inputs.A && inputs.B;
     return false;
@@ -32,7 +37,10 @@ export default function CompositeUnit() {
   const isArithmetic = operation === 'ADD' || operation === 'SUB';
   const isLogic = operation === 'AND' || operation === 'OR' || operation === 'NOT';
 
-  const reset = () => setInputs({ A: false, B: false });
+  const reset = () => {
+    setInputs({ A: false, B: false });
+    setPowered(true);
+  };
 
   const getEquation = () => {
     switch (operation) {
@@ -53,7 +61,7 @@ export default function CompositeUnit() {
       booleanEquations={[getEquation()]}
     >
       <div className="space-y-6">
-        <div className="flex justify-center">
+        <div className="flex justify-between items-start">
           <div className="w-full max-w-sm">
             <label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide block mb-2">
               Operation Mode
@@ -71,6 +79,7 @@ export default function CompositeUnit() {
               </SelectContent>
             </Select>
           </div>
+          <PowerButton powered={powered} onToggle={() => setPowered(!powered)} />
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 items-center">
@@ -107,6 +116,15 @@ export default function CompositeUnit() {
               {isLogic && "Gate-based operation"}
               {isArithmetic && "Combinational arithmetic"}
             </div>
+            {operation === 'AND' && (
+              <LogicGate type="AND" inputA={inputs.A} inputB={inputs.B} output={output} powered={powered} className="w-24" />
+            )}
+            {operation === 'OR' && (
+              <LogicGate type="OR" inputA={inputs.A} inputB={inputs.B} output={output} powered={powered} className="w-24" />
+            )}
+            {operation === 'NOT' && (
+              <LogicGate type="NOT" inputA={inputs.A} output={output} powered={powered} className="w-24" />
+            )}
           </div>
 
           <div className="space-y-4">

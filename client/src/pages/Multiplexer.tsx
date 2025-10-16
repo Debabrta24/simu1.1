@@ -3,17 +3,20 @@ import { CircuitLayout } from "@/components/CircuitLayout";
 import { ToggleSwitch } from "@/components/ToggleSwitch";
 import { LEDIndicator } from "@/components/LEDIndicator";
 import { TruthTable } from "@/components/TruthTable";
+import { PowerButton } from "@/components/PowerButton";
 
 export default function Multiplexer() {
   const [dataInputs, setDataInputs] = useState({ D0: false, D1: false, D2: false, D3: false });
   const [selectors, setSelectors] = useState({ S1: false, S0: false });
+  const [powered, setPowered] = useState(true);
 
   const selectedIndex = (selectors.S1 ? 2 : 0) + (selectors.S0 ? 1 : 0);
-  const output = [dataInputs.D0, dataInputs.D1, dataInputs.D2, dataInputs.D3][selectedIndex];
+  const output = powered ? [dataInputs.D0, dataInputs.D1, dataInputs.D2, dataInputs.D3][selectedIndex] : false;
 
   const reset = () => {
     setDataInputs({ D0: false, D1: false, D2: false, D3: false });
     setSelectors({ S1: false, S0: false });
+    setPowered(true);
   };
 
   const truthTableRows = [
@@ -22,6 +25,9 @@ export default function Multiplexer() {
     [true, false, 'D2', dataInputs.D2],
     [true, true, 'D3', dataInputs.D3],
   ];
+
+  const activeWireColor = 'hsl(var(--led-cyan))';
+  const inactiveWireColor = 'hsl(var(--muted-foreground))';
 
   return (
     <CircuitLayout
@@ -39,7 +45,11 @@ export default function Multiplexer() {
         />
       }
     >
-      <div className="space-y-8">
+      <div className="space-y-6">
+        <div className="flex justify-end">
+          <PowerButton powered={powered} onToggle={() => setPowered(!powered)} />
+        </div>
+
         <div className="grid md:grid-cols-3 gap-8 items-start">
           <div className="space-y-4">
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Data Inputs</h3>
@@ -75,6 +85,55 @@ export default function Multiplexer() {
                 <span className="text-xl font-bold text-primary">4:1 MUX</span>
               </div>
             </div>
+            
+            <svg viewBox="0 0 200 200" className="w-48">
+              {[0, 1, 2, 3].map((i) => {
+                const y = 40 + i * 35;
+                const isSelected = i === selectedIndex;
+                const dataValue = [dataInputs.D0, dataInputs.D1, dataInputs.D2, dataInputs.D3][i];
+                const wireColor = powered && isSelected && dataValue ? activeWireColor : inactiveWireColor;
+                
+                return (
+                  <g key={i}>
+                    <line
+                      x1="0"
+                      y1={y}
+                      x2="60"
+                      y2={y}
+                      stroke={wireColor}
+                      strokeWidth="2"
+                    >
+                      {powered && isSelected && dataValue && (
+                        <animate attributeName="stroke-dasharray" values="0,100;100,0" dur="1s" repeatCount="indefinite" />
+                      )}
+                    </line>
+                    <text x="5" y={y - 5} fill="hsl(var(--foreground))" fontSize="10">D{i}</text>
+                  </g>
+                );
+              })}
+              
+              <path
+                d="M 60 20 L 140 60 L 140 140 L 60 180 Z"
+                fill="hsl(var(--card))"
+                stroke="hsl(var(--primary))"
+                strokeWidth="2"
+              />
+              
+              <line
+                x1="140"
+                y1="100"
+                x2="200"
+                y2="100"
+                stroke={powered && output ? activeWireColor : inactiveWireColor}
+                strokeWidth="2"
+              >
+                {powered && output && (
+                  <animate attributeName="stroke-dasharray" values="0,100;100,0" dur="1s" repeatCount="indefinite" />
+                )}
+              </line>
+              <text x="170" y="95" fill="hsl(var(--foreground))" fontSize="10">Y</text>
+            </svg>
+
             <div className="space-y-2 w-full max-w-xs">
               <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide text-center">Selectors</h3>
               <ToggleSwitch

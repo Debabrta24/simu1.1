@@ -3,7 +3,9 @@ import { CircuitLayout } from "@/components/CircuitLayout";
 import { ToggleSwitch } from "@/components/ToggleSwitch";
 import { LEDIndicator } from "@/components/LEDIndicator";
 import { TruthTable } from "@/components/TruthTable";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { LogicGate } from "@/components/LogicGate";
+import { PowerButton } from "@/components/PowerButton";
 
 type GateType = 'AND' | 'OR' | 'NAND' | 'NOR' | 'XOR' | 'XNOR';
 
@@ -35,10 +37,14 @@ const truthTableData = [
 export default function BasicGates() {
   const [inputs, setInputs] = useState({ A: false, B: false });
   const [activeGate, setActiveGate] = useState<GateType>('AND');
+  const [powered, setPowered] = useState(true);
 
-  const output = gateLogic[activeGate](inputs.A, inputs.B);
+  const output = powered ? gateLogic[activeGate](inputs.A, inputs.B) : false;
 
-  const reset = () => setInputs({ A: false, B: false });
+  const reset = () => {
+    setInputs({ A: false, B: false });
+    setPowered(true);
+  };
 
   const getTruthTableRows = () => {
     return truthTableData.map(([a, b]) => [
@@ -72,6 +78,10 @@ export default function BasicGates() {
           </TabsList>
         </Tabs>
 
+        <div className="flex justify-end">
+          <PowerButton powered={powered} onToggle={() => setPowered(!powered)} />
+        </div>
+
         <div className="grid md:grid-cols-3 gap-8 items-center">
           <div className="space-y-4">
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Inputs</h3>
@@ -90,13 +100,13 @@ export default function BasicGates() {
           </div>
 
           <div className="flex items-center justify-center">
-            <div className="relative">
-              <div className="flex h-24 w-32 items-center justify-center rounded-lg border-2 border-primary/40 bg-card/50 shadow-neon-cyan">
-                <span className="text-2xl font-bold text-primary">{activeGate}</span>
-              </div>
-              <div className="absolute -left-8 top-1/2 h-0.5 w-8 bg-primary/60 -translate-y-1/2" />
-              <div className="absolute -right-8 top-1/2 h-0.5 w-8 bg-primary/60 -translate-y-1/2" />
-            </div>
+            <LogicGate
+              type={activeGate}
+              inputA={inputs.A}
+              inputB={inputs.B}
+              output={output}
+              powered={powered}
+            />
           </div>
 
           <div className="space-y-4">

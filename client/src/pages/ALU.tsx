@@ -4,6 +4,7 @@ import { ToggleSwitch } from "@/components/ToggleSwitch";
 import { LEDIndicator } from "@/components/LEDIndicator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { PowerButton } from "@/components/PowerButton";
 
 type ALUOperation = 'ADD' | 'SUB' | 'INC' | 'DEC' | 'AND' | 'OR' | 'XOR' | 'NOT';
 
@@ -13,11 +14,22 @@ export default function ALU() {
     B3: false, B2: false, B1: false, B0: false
   });
   const [operation, setOperation] = useState<ALUOperation>('ADD');
+  const [powered, setPowered] = useState(true);
 
   const getAValue = () => (inputs.A3 ? 8 : 0) + (inputs.A2 ? 4 : 0) + (inputs.A1 ? 2 : 0) + (inputs.A0 ? 1 : 0);
   const getBValue = () => (inputs.B3 ? 8 : 0) + (inputs.B2 ? 4 : 0) + (inputs.B1 ? 2 : 0) + (inputs.B0 ? 1 : 0);
 
   const computeALU = () => {
+    if (!powered) {
+      return {
+        result: 0,
+        resultBits: [false, false, false, false],
+        carry: false,
+        zero: false,
+        overflow: false
+      };
+    }
+
     const a = getAValue();
     const b = getBValue();
     let result = 0;
@@ -69,10 +81,13 @@ export default function ALU() {
   };
 
   const aluResult = computeALU();
-  const reset = () => setInputs({
-    A3: false, A2: false, A1: false, A0: false,
-    B3: false, B2: false, B1: false, B0: false
-  });
+  const reset = () => {
+    setInputs({
+      A3: false, A2: false, A1: false, A0: false,
+      B3: false, B2: false, B1: false, B0: false
+    });
+    setPowered(true);
+  };
 
   const isArithmetic = ['ADD', 'SUB', 'INC', 'DEC'].includes(operation);
   const needsBInput = !['INC', 'DEC', 'NOT'].includes(operation);
@@ -90,7 +105,7 @@ export default function ALU() {
       ]}
     >
       <div className="space-y-6">
-        <div className="flex justify-center">
+        <div className="flex justify-between items-start">
           <div className="w-full max-w-sm">
             <label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide block mb-2">
               ALU Operation
@@ -111,6 +126,7 @@ export default function ALU() {
               </SelectContent>
             </Select>
           </div>
+          <PowerButton powered={powered} onToggle={() => setPowered(!powered)} />
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 items-start">

@@ -3,7 +3,9 @@ import { CircuitLayout } from "@/components/CircuitLayout";
 import { ToggleSwitch } from "@/components/ToggleSwitch";
 import { LEDIndicator } from "@/components/LEDIndicator";
 import { TruthTable } from "@/components/TruthTable";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { PowerButton } from "@/components/PowerButton";
+import { LogicGate } from "@/components/LogicGate";
 
 export default function Comparator() {
   const [mode, setMode] = useState<'1-bit' | '4-bit'>('1-bit');
@@ -12,8 +14,10 @@ export default function Comparator() {
     A3: false, A2: false, A1: false, A0: false,
     B3: false, B2: false, B1: false, B0: false
   });
+  const [powered, setPowered] = useState(true);
 
   const get1BitOutputs = () => {
+    if (!powered) return { equal: false, greater: false, lesser: false };
     const equal = inputs1Bit.A === inputs1Bit.B;
     const greater = inputs1Bit.A && !inputs1Bit.B;
     const lesser = !inputs1Bit.A && inputs1Bit.B;
@@ -21,6 +25,7 @@ export default function Comparator() {
   };
 
   const get4BitOutputs = () => {
+    if (!powered) return { equal: false, greater: false, lesser: false };
     const a = (inputs4Bit.A3 ? 8 : 0) + (inputs4Bit.A2 ? 4 : 0) + (inputs4Bit.A1 ? 2 : 0) + (inputs4Bit.A0 ? 1 : 0);
     const b = (inputs4Bit.B3 ? 8 : 0) + (inputs4Bit.B2 ? 4 : 0) + (inputs4Bit.B1 ? 2 : 0) + (inputs4Bit.B0 ? 1 : 0);
     return { equal: a === b, greater: a > b, lesser: a < b };
@@ -34,6 +39,7 @@ export default function Comparator() {
       A3: false, A2: false, A1: false, A0: false,
       B3: false, B2: false, B1: false, B0: false
     });
+    setPowered(true);
   };
 
   const truthTableRows1Bit = [
@@ -79,6 +85,10 @@ export default function Comparator() {
           </TabsList>
         </Tabs>
 
+        <div className="flex justify-end">
+          <PowerButton powered={powered} onToggle={() => setPowered(!powered)} />
+        </div>
+
         {mode === '1-bit' ? (
           <div className="grid md:grid-cols-3 gap-8 items-center">
             <div className="space-y-4">
@@ -98,11 +108,15 @@ export default function Comparator() {
               />
             </div>
 
-            <div className="flex items-center justify-center">
+            <div className="flex flex-col items-center gap-4">
               <div className="text-center">
                 <div className="inline-flex items-center justify-center px-6 py-3 rounded-lg border-2 border-primary/40 bg-card/50 shadow-neon-cyan">
                   <span className="text-xl font-bold text-primary">1-BIT CMP</span>
                 </div>
+              </div>
+              <div className="flex gap-2 justify-center">
+                <LogicGate type="XNOR" inputA={inputs1Bit.A} inputB={inputs1Bit.B} output={inputs1Bit.A === inputs1Bit.B} powered={powered} className="w-20" />
+                <LogicGate type="AND" inputA={inputs1Bit.A} inputB={!inputs1Bit.B} output={inputs1Bit.A && !inputs1Bit.B} powered={powered} className="w-20" />
               </div>
             </div>
 

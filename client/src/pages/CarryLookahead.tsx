@@ -3,6 +3,7 @@ import { CircuitLayout } from "@/components/CircuitLayout";
 import { ToggleSwitch } from "@/components/ToggleSwitch";
 import { LEDIndicator } from "@/components/LEDIndicator";
 import { TruthTable } from "@/components/TruthTable";
+import { PowerButton } from "@/components/PowerButton";
 
 export default function CarryLookahead() {
   const [inputs, setInputs] = useState({
@@ -10,8 +11,17 @@ export default function CarryLookahead() {
     B3: false, B2: false, B1: false, B0: false,
     C0: false
   });
+  const [powered, setPowered] = useState(true);
 
   const computeCLA = () => {
+    if (!powered) {
+      return {
+        P: [false, false, false, false],
+        G: [false, false, false, false],
+        carries: [false, false, false, false, false],
+        sum: [false, false, false, false]
+      };
+    }
     const P = [
       inputs.A0 !== inputs.B0,
       inputs.A1 !== inputs.B1,
@@ -39,11 +49,14 @@ export default function CarryLookahead() {
   };
 
   const result = computeCLA();
-  const reset = () => setInputs({
-    A3: false, A2: false, A1: false, A0: false,
-    B3: false, B2: false, B1: false, B0: false,
-    C0: false
-  });
+  const reset = () => {
+    setInputs({
+      A3: false, A2: false, A1: false, A0: false,
+      B3: false, B2: false, B1: false, B0: false,
+      C0: false
+    });
+    setPowered(true);
+  };
 
   return (
     <CircuitLayout
@@ -60,6 +73,10 @@ export default function CarryLookahead() {
       ]}
     >
       <div className="space-y-8">
+        <div className="flex justify-end">
+          <PowerButton powered={powered} onToggle={() => setPowered(!powered)} />
+        </div>
+
         <div className="grid md:grid-cols-3 gap-8 items-start">
           <div className="space-y-4">
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Input A</h3>

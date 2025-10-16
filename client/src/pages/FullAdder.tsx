@@ -3,14 +3,20 @@ import { CircuitLayout } from "@/components/CircuitLayout";
 import { ToggleSwitch } from "@/components/ToggleSwitch";
 import { LEDIndicator } from "@/components/LEDIndicator";
 import { TruthTable } from "@/components/TruthTable";
+import { FullAdderDiagram } from "@/components/FullAdderDiagram";
+import { PowerButton } from "@/components/PowerButton";
 
 export default function FullAdder() {
   const [inputs, setInputs] = useState({ A: false, B: false, Cin: false });
+  const [powered, setPowered] = useState(true);
 
-  const sum = (inputs.A !== inputs.B) !== inputs.Cin;
-  const carry = (inputs.A && inputs.B) || (inputs.Cin && (inputs.A !== inputs.B));
+  const sum = powered ? ((inputs.A !== inputs.B) !== inputs.Cin) : false;
+  const carry = powered ? ((inputs.A && inputs.B) || (inputs.Cin && (inputs.A !== inputs.B))) : false;
 
-  const reset = () => setInputs({ A: false, B: false, Cin: false });
+  const reset = () => {
+    setInputs({ A: false, B: false, Cin: false });
+    setPowered(true);
+  };
 
   const truthTableRows = [
     [false, false, false, false, false],
@@ -40,52 +46,50 @@ export default function FullAdder() {
         />
       }
     >
-      <div className="grid md:grid-cols-3 gap-8 items-center">
-        <div className="space-y-4">
-          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Inputs</h3>
-          <ToggleSwitch
-            label="A"
-            value={inputs.A}
-            onChange={(v) => setInputs({ ...inputs, A: v })}
-            testId="toggle-input-a"
-          />
-          <ToggleSwitch
-            label="B"
-            value={inputs.B}
-            onChange={(v) => setInputs({ ...inputs, B: v })}
-            testId="toggle-input-b"
-          />
-          <ToggleSwitch
-            label="Cin"
-            value={inputs.Cin}
-            onChange={(v) => setInputs({ ...inputs, Cin: v })}
-            testId="toggle-input-cin"
-          />
+      <div className="space-y-6">
+        <div className="flex justify-end">
+          <PowerButton powered={powered} onToggle={() => setPowered(!powered)} />
         </div>
 
-        <div className="flex flex-col items-center gap-4">
-          <div className="space-y-2 w-full max-w-xs text-xs text-center text-muted-foreground">
-            <div className="px-3 py-2 rounded-md border border-primary/20 bg-card/30">
-              Half Adder 1: A ⊕ B
-            </div>
-            <div className="px-3 py-2 rounded-md border border-primary/20 bg-card/30">
-              Half Adder 2: Result ⊕ Cin
-            </div>
-            <div className="px-3 py-2 rounded-md border border-primary/20 bg-card/30">
-              OR Gate: Combines carries
-            </div>
+        <div className="grid md:grid-cols-3 gap-8 items-center">
+          <div className="space-y-4">
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Inputs</h3>
+            <ToggleSwitch
+              label="A"
+              value={inputs.A}
+              onChange={(v) => setInputs({ ...inputs, A: v })}
+              testId="toggle-input-a"
+            />
+            <ToggleSwitch
+              label="B"
+              value={inputs.B}
+              onChange={(v) => setInputs({ ...inputs, B: v })}
+              testId="toggle-input-b"
+            />
+            <ToggleSwitch
+              label="Cin"
+              value={inputs.Cin}
+              onChange={(v) => setInputs({ ...inputs, Cin: v })}
+              testId="toggle-input-cin"
+            />
           </div>
-          <div className="text-center">
-            <div className="inline-flex items-center justify-center px-6 py-3 rounded-lg border-2 border-primary/40 bg-card/50 shadow-neon-cyan">
-              <span className="text-xl font-bold text-primary">FULL ADDER</span>
-            </div>
-          </div>
-        </div>
 
-        <div className="space-y-4">
-          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Outputs</h3>
-          <LEDIndicator label="Sum" value={sum} testId="led-sum" />
-          <LEDIndicator label="Cout" value={carry} testId="led-carry" />
+          <div className="flex items-center justify-center">
+            <FullAdderDiagram
+              inputA={inputs.A}
+              inputB={inputs.B}
+              inputCin={inputs.Cin}
+              sum={sum}
+              carry={carry}
+              powered={powered}
+            />
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Outputs</h3>
+            <LEDIndicator label="Sum" value={sum} testId="led-sum" />
+            <LEDIndicator label="Cout" value={carry} testId="led-carry" />
+          </div>
         </div>
       </div>
     </CircuitLayout>

@@ -3,14 +3,17 @@ import { CircuitLayout } from "@/components/CircuitLayout";
 import { ToggleSwitch } from "@/components/ToggleSwitch";
 import { LEDIndicator } from "@/components/LEDIndicator";
 import { TruthTable } from "@/components/TruthTable";
+import { PowerButton } from "@/components/PowerButton";
 
 export default function PriorityEncoder() {
   const [inputs, setInputs] = useState({
     D7: false, D6: false, D5: false, D4: false,
     D3: false, D2: false, D1: false, D0: false
   });
+  const [powered, setPowered] = useState(true);
 
   const getOutputs = () => {
+    if (!powered) return { A2: false, A1: false, A0: false, valid: false };
     if (inputs.D7) return { A2: true, A1: true, A0: true, valid: true };
     if (inputs.D6) return { A2: true, A1: true, A0: false, valid: true };
     if (inputs.D5) return { A2: true, A1: false, A0: true, valid: true };
@@ -23,10 +26,13 @@ export default function PriorityEncoder() {
   };
 
   const outputs = getOutputs();
-  const reset = () => setInputs({
-    D7: false, D6: false, D5: false, D4: false,
-    D3: false, D2: false, D1: false, D0: false
-  });
+  const reset = () => {
+    setInputs({
+      D7: false, D6: false, D5: false, D4: false,
+      D3: false, D2: false, D1: false, D0: false
+    });
+    setPowered(true);
+  };
 
   const truthTableRows = [
     ['X', 'X', 'X', 'X', 'X', 'X', 'X', true, true, true, true, true],
@@ -58,39 +64,45 @@ export default function PriorityEncoder() {
         />
       }
     >
-      <div className="grid md:grid-cols-3 gap-8 items-start">
-        <div className="space-y-4">
-          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Inputs (Priority: High→Low)</h3>
-          {[7, 6, 5, 4, 3, 2, 1, 0].map((i) => (
-            <ToggleSwitch
-              key={i}
-              label={`D${i}`}
-              value={inputs[`D${i}` as keyof typeof inputs]}
-              onChange={(v) => setInputs({ ...inputs, [`D${i}`]: v })}
-              testId={`toggle-d${i}`}
-            />
-          ))}
+      <div className="space-y-6">
+        <div className="flex justify-end">
+          <PowerButton powered={powered} onToggle={() => setPowered(!powered)} />
         </div>
 
-        <div className="flex items-center justify-center">
-          <div className="text-center">
-            <div className="inline-flex items-center justify-center px-6 py-3 rounded-lg border-2 border-primary/40 bg-card/50 shadow-neon-cyan">
-              <span className="text-xl font-bold text-primary">PRIORITY ENC</span>
-            </div>
-            <p className="text-xs text-muted-foreground mt-2">8-to-3 Line</p>
+        <div className="grid md:grid-cols-3 gap-8 items-start">
+          <div className="space-y-4">
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Inputs (Priority: High→Low)</h3>
+            {[7, 6, 5, 4, 3, 2, 1, 0].map((i) => (
+              <ToggleSwitch
+                key={i}
+                label={`D${i}`}
+                value={inputs[`D${i}` as keyof typeof inputs]}
+                onChange={(v) => setInputs({ ...inputs, [`D${i}`]: v })}
+                testId={`toggle-d${i}`}
+              />
+            ))}
           </div>
-        </div>
 
-        <div className="space-y-4">
-          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Outputs</h3>
-          <LEDIndicator label="A2" value={outputs.A2} testId="led-a2" />
-          <LEDIndicator label="A1" value={outputs.A1} testId="led-a1" />
-          <LEDIndicator label="A0" value={outputs.A0} testId="led-a0" />
-          <LEDIndicator label="Valid" value={outputs.valid} variant="amber" testId="led-valid" />
-          <div className="mt-4 p-4 rounded-md border border-primary/20 bg-card/30">
-            <p className="text-xs text-muted-foreground">
-              Binary Output: {outputs.A2 ? '1' : '0'}{outputs.A1 ? '1' : '0'}{outputs.A0 ? '1' : '0'}
-            </p>
+          <div className="flex items-center justify-center">
+            <div className="text-center">
+              <div className="inline-flex items-center justify-center px-6 py-3 rounded-lg border-2 border-primary/40 bg-card/50 shadow-neon-cyan">
+                <span className="text-xl font-bold text-primary">PRIORITY ENC</span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">8-to-3 Line</p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Outputs</h3>
+            <LEDIndicator label="A2" value={outputs.A2} testId="led-a2" />
+            <LEDIndicator label="A1" value={outputs.A1} testId="led-a1" />
+            <LEDIndicator label="A0" value={outputs.A0} testId="led-a0" />
+            <LEDIndicator label="Valid" value={outputs.valid} variant="amber" testId="led-valid" />
+            <div className="mt-4 p-4 rounded-md border border-primary/20 bg-card/30">
+              <p className="text-xs text-muted-foreground">
+                Binary Output: {outputs.A2 ? '1' : '0'}{outputs.A1 ? '1' : '0'}{outputs.A0 ? '1' : '0'}
+              </p>
+            </div>
           </div>
         </div>
       </div>
